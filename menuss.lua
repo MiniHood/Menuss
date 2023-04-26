@@ -35,7 +35,7 @@ local CloningOptions = CreateMenu('Cloning Options', '.', 'topleft', 255, 0, 0)
 local Invisibility = playeroptionsMenu:AddCheckbox({ icon = '💡', label = 'Invisibility', value = 'n' })
 local AutoClean = playeroptionsMenu:AddCheckbox({ icon = '💡', label = 'Auto Clean', value = 'n' })
 local WalkUnderwater = playeroptionsMenu:AddCheckbox({ icon = '💡', label = 'Walk Underwater', value = 'n' })
-local Forcefield = playeroptionsMenu:AddCheckbox({ icon = '💡', label = 'Force Field', value = 'n' })
+local Forcefield = playeroptionsMenu:AddCheckbox({ icon = '💡', label = 'Force Field', disabled = true, value = 'n' })
 local BurnMode = playeroptionsMenu:AddCheckbox({ icon = '💡', label = 'Burn Mode', value = 'n' })
 local Drunk = playeroptionsMenu:AddCheckbox({ icon = '💡', label = 'Drunk', value = 'n' })
 local Seatbelt = playeroptionsMenu:AddCheckbox({ icon = '💡', label = 'Seatbelt', value = 'n' })
@@ -59,6 +59,17 @@ local BurnModeToggle = false
 local DrunkToggle = false
 local SeatbeltToggle = false
 local NoRagdollToggle = false
+local RPGToggle = false
+local GunsToggle = false
+local FireworkToggle = false
+local SnowballsToggle = false
+local BallsToggle = false
+local WaterHydrantsToggle = false
+local FlameleakToggle = false
+local ValkyrieTurretToggle = false
+local FlaresToggle = false
+local TazersToggle = false
+local MolotovsToggle = false
 
 -- Player Option Cache
 local ForcefieldCache = {}
@@ -88,6 +99,18 @@ local TopSpeedKMPH = MenussCustomsMenu:AddRange({ icon = '⚽', label = 'Top Spe
 
 -- Vehicle Option Vehicle Weapons Buttons
 local DisplayProjectilePath = VehicleWeaponsMenu:AddCheckbox({ icon = '😃', label = 'Display Projectile Path', value = 'n' })
+local EnableRPG = VehicleWeaponsMenu:AddCheckbox({ icon = '😃', label = 'RPG', value = 'n' })
+local EnableFireworks = VehicleWeaponsMenu:AddCheckbox({ icon = '😃', label = 'Fireworks', value = 'n' })
+local EnableGuns = VehicleWeaponsMenu:AddCheckbox({ icon = '😃', label = 'Guns', value = 'n' })
+local EnableSnowballs = VehicleWeaponsMenu:AddCheckbox({ icon = '😃', label = 'Snowballs', value = 'n' })
+local EnableBalls = VehicleWeaponsMenu:AddCheckbox({ icon = '😃', label = 'Balls', value = 'n' })
+local EnableWaterHydrants = VehicleWeaponsMenu:AddCheckbox({ icon = '😃', label = 'Water Hydrants', value = 'n' })
+local EnableFlameLeaks = VehicleWeaponsMenu:AddCheckbox({ icon = '😃', label = 'Flame Leaks', value = 'n' })
+local EnableValkyrieTurrets = VehicleWeaponsMenu:AddCheckbox({ icon = '😃', label = 'Valkyrie Turrets', value = 'n' })
+local EnableFlares = VehicleWeaponsMenu:AddCheckbox({ icon = '😃', label = 'Flares', value = 'n' })
+local EnableHeavySnipers = VehicleWeaponsMenu:AddCheckbox({ icon = '😃', label = 'Heavy Snipers', value = 'n' })
+local EnableTazers = VehicleWeaponsMenu:AddCheckbox({ icon = '😃', label = 'Tazers', value = 'n' })
+local EnableMolotovs = VehicleWeaponsMenu:AddCheckbox({ icon = '😃', label = 'Molovtovs', value = 'n' })
 
 -- Vehicle Option Vehicle Weapon Toggles
 local DisplayProjectilePathToggle = false
@@ -95,6 +118,50 @@ local DisplayProjectilePathToggle = false
 -- Vehicle Option Vehicle Weapon Events
 
 -- Player Option Functions
+
+-- Vehicle Sides
+local vehicle_weapons_originR, vehicle_weapons_targetR
+local vehicle_weapons_originL, vehicle_weapons_targetL
+
+function StoreVehicleWeaponPosition(vehicle)
+    local dim1, dim2 = vehicle.Model.Dimensions
+
+    if IsGameplayCamLookingBehind() then
+        vehicle_weapons_originR = GetOffsetFromEntityInWorldCoords(vehicle, dim1.x - 0.22, 0.5 - dim2.y, 0.5)
+        vehicle_weapons_targetR = GetOffsetFromEntityInWorldCoords(vehicle, dim1.x - 0.22, -(dim1.y + 350.0), 0.5)
+
+        vehicle_weapons_originL = GetOffsetFromEntityInWorldCoords(vehicle, 0.22 - dim2.x, 0.5 - dim2.y, 0.5)
+        vehicle_weapons_targetL = GetOffsetFromEntityInWorldCoords(vehicle, 0.22 - dim2.x, -(dim2.y + 350.0), 0.5)
+    else
+        vehicle_weapons_originR = GetOffsetFromEntityInWorldCoords(vehicle, dim1.x - 0.22, dim1.y - 0.5, 0.5)
+        vehicle_weapons_targetR = GetOffsetFromEntityInWorldCoords(vehicle, dim1.x - 0.22, dim1.y + 350.0, 0.5)
+
+        vehicle_weapons_originL = GetOffsetFromEntityInWorldCoords(vehicle, 0.22 - dim2.x, dim1.y - 0.5, 0.5)
+        vehicle_weapons_targetL = GetOffsetFromEntityInWorldCoords(vehicle, 0.22 - dim2.x, dim1.y + 350.0, 0.5)
+    end
+end
+
+
+
+function ShootBullet(sourcePosition, targetPosition, owner, weaponHash, damage, speed, audible, visible)
+    local audibleFlag = audible and true or false
+    local visibleFlag = not visible and true or false
+
+    ShootSingleBulletBetweenCoords(
+        sourcePosition.x, sourcePosition.y, sourcePosition.z,
+        targetPosition.x, targetPosition.y, targetPosition.z,
+        damage, true, weaponHash, owner, audibleFlag, visibleFlag, speed
+    )
+end
+
+function SetVehicleWeaponFire(hash, speed)
+    if not speed then
+        speed = 2000.0
+    end
+
+    ShootBullet()
+end
+
 function ToggleClean()
     while true do
         Citizen.Wait(200)
@@ -151,9 +218,66 @@ end
     return
 end
 
+function GetEntitiesWithinRange(coords, range, models)
+    local entities = {}
+    local modelHashes = {}
+
+    if models then
+        for _, model in ipairs(models) do
+            local hash = GetHashKey(model)
+            table.insert(modelHashes, hash)
+        end
+    end
+
+    local handle, entity = FindFirstEntity()
+    repeat
+        local distance = #(coords - GetEntityCoords(entity))
+        if distance <= range then
+            if not models or HasModelLoaded(GetEntityModel(entity)) and table.contains(modelHashes, GetEntityModel(entity)) then
+                table.insert(entities, entity)
+            end
+        end
+
+        handle, entity = FindNextEntity(handle)
+    until not handle
+
+    return entities
+end
+
+function ApplyForce(entity, direction, forcetype)
+    ApplyForceToEntity(entity, forcetype, direction.x, direction.y, direction.z, 0, 0, 0, false, false, true, true, false, true)
+end
 
 function ToggleForcefield()
-
+        local myPed = ped
+        local myPos = GetEntityCoords(myPed)
+        Citizen.Wait(1)
+        while ForcefieldToggle do
+            myPed = PlayerPedId() -- update player ped
+            myPos = GetEntityCoords(myPed) -- update player position
+              for _, ent in ipairs(GetGamePool('CVehicle')) do
+                local entPos = GetEntityCoords(ent)
+                if DoesEntityExist(ent) and ent ~= myPed and ent ~= GetVehiclePedIsIn(ped, false) and GetDistanceBetweenCoords(myPos.x, myPos.y, myPos.z, entPos.x, entPos.y, entPos.z, false) < 10.0 then
+                    local director = vector3(myPos.x - entPos.x, myPos.y - entPos.y, myPos.z - entPos.z)
+                    ApplyForce(ent, director, 3)
+                end
+              end
+              for _, ent in ipairs(GetGamePool('CPed')) do
+                local entPos = GetEntityCoords(ent)
+                if DoesEntityExist(ent) and ent ~= myPed and #(myPos - entPos) < 10.0 then
+                  ApplyForceToEntity(ent, 3, myPos.x - entPos.x, myPos.y - entPos.y, myPos.z - entPos.z, 0, 0, 0, 1, true, false, true, false, true) -- push entity away
+                  local director = vector3(myPos.x - entPos.x, myPos.y - entPos.y, myPos.z - entPos.z)
+                  ApplyForce(ent, director, 3)
+                end
+              end
+              for _, ent in ipairs(GetGamePool('CObject')) do
+                local entPos = GetEntityCoords(ent)
+                if DoesEntityExist(ent) and ent ~= myPed and #(myPos - entPos) < 10.0 then
+                  local director = vector3(myPos.x - entPos.x, myPos.y - entPos.y, myPos.z - entPos.z)
+                  ApplyForce(ent, director, 3)
+                end
+              end
+      end
 end
 
 function DrawLine3D(startPos, endPos, r, g, b, alpha)
@@ -330,7 +454,7 @@ end)
 
 TopSpeedKMPH:On('change', function(item, newValue, oldValue)
     SetEntityMaxSpeed(GetVehiclePedIsIn(ped, false), newValue)
-    TopSpeedKMPH.Description = ("Speed: %s"):format(math.ceil((newValue+0.5 * 3.6) * 2) + 2) -- This just sets it to MPH, it didnt take me 2 hours to figure this out... its your fault.
+    TopSpeedKMPH.Description = ("Speed: %s"):format(math.ceil((newValue+0.5 * 3.6) * 2) + 2)
 end)
 
 DisplayProjectilePath:On('change', 
