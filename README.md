@@ -29,3 +29,10 @@ I will be updating this until it's fully finished however I'm hoping the communi
 
 - All other features
 - Ace Permissions support
+
+
+## Requirements
+
+You will need the following to be able to run Menuss
+
+- [`menuv`](https://github.com/ThymonA/menuv)
