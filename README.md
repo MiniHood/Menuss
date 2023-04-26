@@ -1,7 +1,7 @@
 
 # Menuss.lua
 
-An attempted community driven recreation of Menyoo for FiveM servers. This allows for them to add it without needing the users to have it. 
+An attempted recreation of Menyoo for FiveM servers. This allows for them to add it without needing the users to have it. 
 
 
 
@@ -20,7 +20,7 @@ An attempted community driven recreation of Menyoo for FiveM servers. This allow
 
 This was one of my first projects I ever made in lua. At first I attempted to make it as clean as possible and it's pretty clean but the code is still very spagettish.
 
-I will be updating this until it's fully finished however I'm hoping the community can help out, adding their own features. It doesn't event have to be from Menyoo.
+I will be updating this until it's fully finished.
 
 
 
