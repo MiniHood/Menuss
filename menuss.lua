@@ -159,8 +159,31 @@ function SetVehicleWeaponFire(hash, speed)
         speed = 2000.0
     end
 
-    ShootBullet()
+    ShootBullet(vehicle_weapons_originL, vehicle_weapons_targetL, ped, hash, 200, speed, true, true)
+    ShootBullet(vehicle_weapons_originR, vehicle_weapons_targetR, ped, hash, 200, speed, true, true)
 end
+
+function SetVehicleWeaponExplosion(type)
+    local vehicle = GetVehiclePedIsIn(ped, false)
+
+    if IsDisabledControlPressed(0, 19) then -- INPUT_CHARACTER_WHEEL
+        TargPosR = GetOffsetFromEntityInWorldCoords(vehicle, 1.24, -40.0, 0.0)
+        TargPosL = GetOffsetFromEntityInWorldCoords(vehicle, -1.24, -40.0, 0.0)
+    else
+        TargPosR = GetOffsetFromEntityInWorldCoords(vehicle, 1.24, 40.0, 0.0)
+        TargPosL = GetOffsetFromEntityInWorldCoords(vehicle, -1.24, 40.0, 0.0)
+    end
+
+    AddExplosion(TargPosR.x, TargPosR.y, TargPosR.z, type, 5.0, true, false, 0.3)
+    AddExplosion(TargPosL.x, TargPosL.y, TargPosL.z, type, 5.0, true, false, 0.3)
+end
+
+RegisterCommand('+shootvehicleweapon', function ()
+    print('test')
+
+end, false)
+
+RegisterKeyMapping('+shootvehicleweapon', 'Shoot Vehicle Weapon', 'keyboard', 'l')
 
 function ToggleClean()
     while true do
@@ -173,6 +196,8 @@ function ToggleClean()
         ClearPedBloodDamage(ped)
     end
 end
+
+
 
 function ToggleUnderwater()
     while true do
@@ -468,4 +493,16 @@ function(_, _, _)
 end)
 
 
-menu:OpenWith('KEYBOARD', 'F6') -- Press F1 to open Menu
+EnableRPG:On('change', function(_,_,_)
+    if not DisplayProjectilePathToggle then
+        RPGToggle = true
+        CreateThread(ShootingRPGFunction)
+    else
+        DisplayProjectilePathToggle = false
+    end
+end)
+
+RegisterKeyMapping('+openmenuss', 'Open Menuss', 'keyboard', 'F7')
+RegisterCommand('+openmenuss', function ()
+    menu:Open()
+end, false)
