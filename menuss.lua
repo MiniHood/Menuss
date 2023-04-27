@@ -25,7 +25,7 @@ local menu_button = menu:AddButton({ icon = '😃', label = 'Misc Options', valu
 local menu_button = menu:AddButton({ icon = '😃', label = 'Settings', value = settingsMenu, description = 'Set your tings.' })
 
 -- Global Locals?
-local ped = PlayerrPedId()
+local ped = PlayerPedId()
 
 -- Player Options Menus
 local TriggerFXMenu = CreateMenu('TriggerFX', '.', 'topleft', 255, 0, 0)
