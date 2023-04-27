@@ -25,7 +25,7 @@ local menu_button = menu:AddButton({ icon = '😃', label = 'Misc Options', valu
 local menu_button = menu:AddButton({ icon = '😃', label = 'Settings', value = settingsMenu, description = 'Set your tings.' })
 
 -- Global Locals?
-local ped = GetPlayerPed(-1)
+local ped = PlayerrPedId()
 
 -- Player Options Menus
 local TriggerFXMenu = CreateMenu('TriggerFX', '.', 'topleft', 255, 0, 0)
@@ -164,7 +164,7 @@ end
 
 function ToggleClean()
     while true do
-        Citizen.Wait(200)
+        Wait(200)
 
         if not AutoCleanToggle then
             TerminateThisThread()
@@ -176,7 +176,7 @@ end
 
 function ToggleUnderwater()
     while true do
-        Citizen.Wait(1)
+        Wait(1)
         if IsEntityInWater(ped) then
             
         if not WalkUnderwaterToggle then
@@ -251,7 +251,7 @@ end
 function ToggleForcefield()
         local myPed = ped
         local myPos = GetEntityCoords(myPed)
-        Citizen.Wait(1)
+        Wait(1)
         while ForcefieldToggle do
             myPed = PlayerPedId() -- update player ped
             myPos = GetEntityCoords(myPed) -- update player position
@@ -311,7 +311,7 @@ function DisplayProjectilePathDraw()
         local endpointZ = pos.z
         local line = DrawLine(pos.x, pos.y, pos.z, endpointX, endpointY, endpointZ, 255, 0, 0, 2.0)
         
-        Citizen.Wait(1)
+        Wait(1)
         if not DisplayProjectilePathToggle then
             ClearDrawOrigin()
             TerminateThisThread()
@@ -362,7 +362,7 @@ AutoClean:On('change',
 function(_, _, _) 
     if not AutoCleanToggle then                                                
         AutoCleanToggle = true -- Keep here otherwise it'll be a race condition  | Normally Wins
-        Citizen.CreateThread(ToggleClean) --<--<--<--<--<--<--<--<--<--<--<--<-<-| 
+        CreateThread(ToggleClean) --<--<--<--<--<--<--<--<--<--<--<--<-<-| 
     else
         print('Destroying thread.')
         AutoCleanToggle = false
@@ -401,7 +401,7 @@ function(_, _, _)
         if not HasAnimSetLoaded("MOVE_M@DRUNK@VERYDRUNK") then
             RequestAnimSet("MOVE_M@DRUNK@VERYDRUNK")
             while not HasAnimSetLoaded("MOVE_M@DRUNK@VERYDRUNK") do
-                Citizen.Wait(0)
+                Wait(0)
             end
         end
         SetPedIsDrunk(ped, true)
@@ -425,7 +425,7 @@ WalkUnderwater:On('change',
 function(_, _, _) 
     if not WalkUnderwaterToggle then
         WalkUnderwaterToggle = true
-        Citizen.CreateThread(ToggleUnderwater)
+        CreateThread(ToggleUnderwater)
     else
         WalkUnderwaterToggle = false
         TerminateThread(UnderwaterThreadID)
@@ -436,7 +436,7 @@ Forcefield:On('change',
 function(_, _, _) 
     if not ForcefieldToggle then
         ForcefieldToggle = true
-        Citizen.CreateThread(Forcefield)
+        CreateThread(Forcefield)
     else
         ForcefieldToggle = false
     end
@@ -461,7 +461,7 @@ DisplayProjectilePath:On('change',
 function(_, _, _) 
     if not DisplayProjectilePathToggle then
         DisplayProjectilePathToggle = true
-        Citizen.CreateThread(DisplayProjectilePathDraw)
+        CreateThread(DisplayProjectilePathDraw)
     else
         DisplayProjectilePathToggle = false
     end
