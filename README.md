@@ -9,6 +9,12 @@ An attempted recreation of Menyoo for FiveM servers. This allows for them to add
 
 - [@MiniHood](https://github.com/MiniHood)
 
+## Contributors 
+- [@FBFezz](https://github.com/FBFezz)
+Many thanks to any and all future and present contributors.
+
+
+## Badges
 [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
 
 ![MiniHood Badge](https://img.shields.io/badge/MiniHood-Never%20give%20up-red
