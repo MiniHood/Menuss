@@ -13,6 +13,9 @@ An attempted recreation of Menyoo for FiveM servers. This allows for them to add
 - [@FBFezz](https://github.com/FBFezz)
 Many thanks to any and all future and present contributors.
 
+## Inspiration & Credit 
+[MenyooSP](https://github.com/MAFINS/MenyooSP)
+[MenyooFiveM](https://github.com/PichotM/MenyooFiveM)
 
 ## Badges
 [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
