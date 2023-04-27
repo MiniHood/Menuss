@@ -11,10 +11,12 @@ An attempted recreation of Menyoo for FiveM servers. This allows for them to add
 
 ## Contributors 
 - [@FBFezz](https://github.com/FBFezz)
+
 Many thanks to any and all future and present contributors.
 
 ## Inspiration & Credit 
 [MenyooSP](https://github.com/MAFINS/MenyooSP)
+
 [MenyooFiveM](https://github.com/PichotM/MenyooFiveM)
 
 ## Badges
