@@ -25,7 +25,7 @@ Many thanks to any and all future and present contributors.
 ![MiniHood Badge](https://img.shields.io/badge/MiniHood-Never%20give%20up-red
 )
 
-[![Coastal Life Badge](https://img.shields.io/badge/Coastal%20Life-discord.gg%2Fclife-blue)](https://discord.gg/clife)
+Join me and the team at https://discord.gg/e348J692Gk
 
 ## Why I made this project
 
